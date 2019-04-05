@@ -8,4 +8,4 @@ public class Item extends Entity {
         super(room, name);
     }
 
-}
+} 

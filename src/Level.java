@@ -78,5 +78,16 @@ public class Level {
         public int amountOfNeighbors() {
             return neighbors.size();
         }
+
+        public boolean hasNeighbor(Room r) {
+
+            for(int i = 0; i < neighbors.size(); i++) {
+                if(r.equals(neighbors.get(i))) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
