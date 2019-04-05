@@ -1,25 +1,11 @@
-public class Item {
-    private String name;
-    private String description;
+public class Item extends Entity {
 
-    public Item (String name, String description) {
-        this.name = name;
-        this.description = description;
+    public Item(Level.Room room, String name, String description) {
+        super(room, name, description);
     }
 
-    public String getName() {
-        return name;
+    public Item(Level.Room room, String name) {
+        super(room, name);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
