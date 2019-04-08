@@ -1,14 +1,18 @@
 
+import sun.nio.cs.ext.MacHebrew;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Level {
     private HashMap<String, Room> rooms;
     private ArrayList<Item> items;
+    private ArrayList<Creature> creatures;
 
     public Level() {
         rooms = new HashMap<String, Room>();
         this.items = new ArrayList<>();
+        creatures = new ArrayList<>();
     }
 
     public void setup() {
@@ -17,19 +21,39 @@ public class Level {
         addRoom("dungeon", "very scary house");
         addRoom("restroom", "stinky place");
         addRoom("cell", "you can go in but not out");
+        addRoom("bedroom", "where the king sleeps");
+        addRoom( "courtyard", "patio area with a nice fountain");
+        addRoom("roof", "has a nice view of the kingdom");
+        addRoom("kitchen", "where the meals are made");
 
+
+        addUndirectedEdge("kitchen", "dungeon");
+        addUndirectedEdge("kitchen", "bedroom");
+        addDirectedEdge("kitchen", "hall");
         addDirectedEdge("hall", "dungeon");
         addUndirectedEdge("hall", "closet");
+        addUndirectedEdge("courtyard", "bedroom");
+        addDirectedEdge("courtyard", "roof");
+        addDirectedEdge("roof", "bedroom");
+        addUndirectedEdge("bedroom", "restroom");
         addUndirectedEdge("dungeon", "restroom");
         addDirectedEdge("restroom", "cell");
         addDirectedEdge("restroom", "hall");
 
-        addItem("Chocolate", "sweet delight", "hall");
+        for(int i = 0; i < 7; i++) {
+            addItem("food" +i, "edible thingy", getRandomRoom());
+        }
     }
 
     public Level.Room getRandomRoom() {
+        int i = (int)(Math.random()*rooms.keySet().size());
+        int f = 0;
+
         for(String room : rooms.keySet()) {
-            return rooms.get(room);
+            if(f == i) {
+                return rooms.get(room);
+            }
+            f++;
         }
 
         System.out.println("There are no rooms");
@@ -43,6 +67,10 @@ public class Level {
 
     public void addItem(String itemName, String description, String roomName) {
         rooms.get(roomName).addItem(itemName,description);
+    }
+
+    public void addItem(String itemName, String description, Room room) {
+        room.addItem(itemName,description);
     }
 
     public void addDirectedEdge(String n1, String n2) {
@@ -132,6 +160,11 @@ public class Level {
 
         public int amountOfNeighbors() {
             return neighbors.size();
+        }
+
+        public Room getRandomNeighbor() {
+            int rand = (int)(Math.random()*neighbors.size());
+            return rooms.get(rand);
         }
 
         public boolean hasNeighbor(Room r) {

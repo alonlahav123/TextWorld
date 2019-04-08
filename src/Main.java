@@ -52,9 +52,11 @@ public class Main {
         if(current.amountOfNeighbors() == 0) {
             System.out.println("There are no neighbors!");
         } else {
-            System.out.println(current.getNeighborNames());
+            System.out.println("Neighboring Rooms: ");
+            System.out.print(current.getNeighborNames());
         }
 
+        System.out.println("Items: ");
         System.out.println(current.getItems());
     }
 
