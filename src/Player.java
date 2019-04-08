@@ -2,38 +2,45 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player extends Creature{
-    private String name, description;
+    private Level level;
     private ArrayList<Item> items;
-    private Level.Room currentRoom;
 
-    public Player(Level.Room currentRoom, String name, String description) {
+    public Player(Level.Room currentRoom, String name, String description, Level level) {
         super(currentRoom,name,description);
+        this.level = level;
+        this.items = new ArrayList<>();
     }
 
     public void addItem(Item item) {
-
+        items.add(item);
+        System.out.println(item.getName() + " has been added to your inventory");
     }
 
-    @Override
-    public void act() {
-        String response = "";
-        Scanner s = new Scanner(System.in);
+    public void dropItem(Item item) {
+        items.remove(item);
+        System.out.println(item.getName() + " has been dropped from your inventory");
+    }
 
-        System.out.println("You are in the " + current.getName());
-        System.out.print("What do you want to do? > ");
-        response = s.nextLine();
-        String[] responseSplit = response.split(" ");
+    public ArrayList<Item> getItems() {
+        return items;
+    }
 
-        if(responseSplit[0].equals("go")) {
-            current = g.getRoom(responseSplit[1]);
-        } else if(response.equals("look")) {
-            look(current);
-        } else if(responseSplit[0].equals("add")) {
-            g.addDirectedEdge(current.getName(), responseSplit[1]);
-        } else if(response.equals("quit")) {
+    public Item getItem(String name) {
+        for(int i = 0; i < items.size(); i++) {
+            if(name.equals(items.get(i).getName())) {
+                return items.get(i);
+            }
+        }
 
+        return null;
+    }
+
+    private static void look(Level.Room current) {
+
+        if(current.amountOfNeighbors() == 0) {
+            System.out.println("There are no neighbors!");
         } else {
-            System.out.println("Commands: \"go <roomname>\", \"look\", add \"<roomname>\"");
+            System.out.println(current.getNeighborNames());
         }
     }
 }

@@ -1,34 +1,30 @@
 public class Entity {
-    private Level.Room currentRoom;
-    private String discription;
+    private String description;
     private String name;
 
-    public Entity(Level.Room currentRoom, String name) {
-        this.currentRoom = currentRoom;
+    public Entity(String name, String description) {
+        this.description = description;
         this.name = name;
     }
 
-    public Entity(Level.Room currentRoom, String name, String discription) {
-        this.currentRoom = currentRoom;
-        this.discription = discription;
+    @Override
+    public String toString() {
+        return name + " " + description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
-
-
-    public Level.Room getCurrentRoom() {
-        return currentRoom;
-    }
-
-    public void setCurrentRoom(Level.Room currentRoom) {
-        this.currentRoom = currentRoom;
-    }
-
-    public String getDiscription() {
-        return discription;
-    }
-
-    public void setDiscription(String discription) {
-        this.discription = discription;
-    }
-
 }

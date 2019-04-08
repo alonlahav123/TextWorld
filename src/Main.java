@@ -5,38 +5,46 @@ public class Main {
 
     public static void main(String[] args){
 
-        Level g = new Level();
-        g.addRoom("hall", "a long dark hallway");
-        g.addRoom("closet", "a dark, dark closet");
-        g.addRoom("dungeon", "very scary house");
-
-        g.addDirectedEdge("hall", "dungeon");
-        g.addUndirectedEdge("hall", "closet");
-
-        Level.Room current = g.getRoom("hall");
+        Level l = new Level();
+        l.setup();
+        Player player = new Player(l.getRandomRoom(),"me", "big boi", l);
 
         String response = "";
         Scanner s = new Scanner(System.in);
 
         do{
-            System.out.println("You are in the " + current.getName());
+            System.out.println("You are in the " + player.getCurrentRoom());
             System.out.print("What do you want to do? > ");
             response = s.nextLine();
-            String[] responseSplit = response.split(" ");
 
-            if(responseSplit[0].equals("go")) {
-                current = g.getRoom(responseSplit[1]);
-            } else if(response.equals("look")) {
-                look(current);
-            } else if(responseSplit[0].equals("add")) {
-                g.addDirectedEdge(current.getName(), responseSplit[1]);
-            } else if(response.equals("quit")) {
+            act(response, player, l);
 
-            } else {
-                System.out.println("Commands: \"go <roomname>\", \"look\", add \"<roomname>\"");
-            }
         } while(!response.equals("quit"));
 
+    }
+
+    private static void act(String response, Player player, Level l) {
+        String[] responseSplit = response.split(" ");
+
+        if(responseSplit[0].equals("go")) {
+            player.moveToRoom( l.getRoom(responseSplit[1]) );
+        } else if(response.equals("look")) {
+            look(player.getCurrentRoom());
+        } else if(responseSplit[0].equals("add")) {
+            l.addDirectedEdge(player.getCurrentRoom().getName(), responseSplit[1]);
+        } else if(response.equals("quit")) {
+            // exit loop
+        } else if(responseSplit[0].equals("pick") && responseSplit[1].equals("up")) {
+            Item item = player.getCurrentRoom().getItem(responseSplit[2]);
+            player.addItem(item);
+            player.getCurrentRoom().removeItem(responseSplit[2]);
+        } else if(responseSplit[0].equals("drop")) {
+            Item item = player.getItem(responseSplit[1]);
+            player.dropItem(item);
+            player.getCurrentRoom().addItem(item.getName(), item.getDescription());
+        } else {
+            System.out.println("Commands: \"go <roomname>\", \"look\", add \"<roomname>\", and \"quit\"");
+        }
     }
 
     private static void look(Level.Room current) {
@@ -44,10 +52,10 @@ public class Main {
         if(current.amountOfNeighbors() == 0) {
             System.out.println("There are no neighbors!");
         } else {
-            for(int i = 0; i < current.amountOfNeighbors(); i++) {
-                System.out.println(current.getNeighborNames());
-            }
+            System.out.println(current.getNeighborNames());
         }
+
+        System.out.println(current.getItems());
     }
 
 }
