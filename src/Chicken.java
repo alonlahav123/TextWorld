@@ -8,7 +8,4 @@ public class Chicken extends Enemies{
         return getCurrentRoom().getRandomNeighbor();
     }
 
-    public void act() {
-
-    }
 }

@@ -9,12 +9,15 @@ public abstract class Enemies extends Creature{
     public void move() {
         Level.Room room = chooseNextRoom();
 
-        if(room != null) {
+        if(room != null ) {
             moveToRoom(room);
         }
     }
 
     protected abstract Level.Room chooseNextRoom();
 
-    public abstract void act();
+    public Player getPlayer() {
+        return player;
+    }
+
 }

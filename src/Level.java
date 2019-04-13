@@ -1,18 +1,15 @@
-
-import sun.nio.cs.ext.MacHebrew;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Level {
     private HashMap<String, Room> rooms;
     private ArrayList<Item> items;
-    private ArrayList<Creature> creatures;
+    private ArrayList<Enemies> enemies;
 
     public Level() {
         rooms = new HashMap<String, Room>();
         this.items = new ArrayList<>();
-        creatures = new ArrayList<>();
+        enemies = new ArrayList<>();
     }
 
     public void setup() {
@@ -43,6 +40,53 @@ public class Level {
         for(int i = 0; i < 7; i++) {
             addItem("food" +i, "edible thingy", getRandomRoom());
         }
+    }
+
+    public String getNearEnemies(Level.Room room) {
+        String output = "";
+
+        for(int i = 0; i < enemies.size(); i++) {
+            if(enemies.get(i).getCurrentRoom().equals(room)) {
+                output += enemies.get(i).getName() + " ";
+            }
+        }
+
+        return output;
+    }
+
+    public void updateEnemies() {
+        for(int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).move();
+        }
+    }
+
+    public void addCreatures(Player player) {
+        int Chickens = 2;
+        int Popstars = 2;
+        int Wumpi = 3;
+
+        for(int i = 0; i < Chickens; i++) {
+            Chicken chik = new Chicken(getRandomRoom(), "Chicken" + i, "hungry boi", player);
+            enemies.add(chik);
+        }
+
+        for(int i = 0; i < Popstars; i++) {
+            Popstar popstar = new Popstar(getRandomRoom(), "Popstar" + i, "sneaky boi", player);
+            enemies.add(popstar);
+        }
+
+        for(int i = 0; i < Wumpi; i++) {
+            Wumpus Wumpus = new Wumpus(getRandomRoom(), "Wumpus" + i, "scardy boi", player);
+            enemies.add(Wumpus);
+        }
+    }
+
+    public ArrayList<Enemies> getEnemies() {
+        return enemies;
+    }
+
+    public void setEnemies(ArrayList<Enemies> enemies) {
+        this.enemies = enemies;
     }
 
     public Level.Room getRandomRoom() {
@@ -163,8 +207,12 @@ public class Level {
         }
 
         public Room getRandomNeighbor() {
-            int rand = (int)(Math.random()*neighbors.size());
-            return rooms.get(rand);
+            if(neighbors.size() == 0) {
+                return null;
+            }
+
+            int i = (int)(Math.random()*neighbors.size());
+            return neighbors.get(i);
         }
 
         public boolean hasNeighbor(Room r) {
@@ -185,6 +233,10 @@ public class Level {
             }
 
             return output;
+        }
+
+        public ArrayList<Room> getNeighbors(){
+            return neighbors;
         }
 
         @Override

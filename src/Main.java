@@ -8,6 +8,7 @@ public class Main {
         Level l = new Level();
         l.setup();
         Player player = new Player(l.getRandomRoom(),"me", "big boi", l);
+        l.addCreatures(player);
 
         String response = "";
         Scanner s = new Scanner(System.in);
@@ -28,8 +29,9 @@ public class Main {
 
         if(responseSplit[0].equals("go")) {
             player.moveToRoom( l.getRoom(responseSplit[1]) );
+            l.updateEnemies();
         } else if(response.equals("look")) {
-            look(player.getCurrentRoom());
+            look(player.getCurrentRoom(), l);
         } else if(responseSplit[0].equals("add")) {
             l.addDirectedEdge(player.getCurrentRoom().getName(), responseSplit[1]);
         } else if(response.equals("quit")) {
@@ -47,17 +49,19 @@ public class Main {
         }
     }
 
-    private static void look(Level.Room current) {
+    private static void look(Level.Room current, Level level) {
 
         if(current.amountOfNeighbors() == 0) {
             System.out.println("There are no neighbors!");
         } else {
-            System.out.println("Neighboring Rooms: ");
-            System.out.print(current.getNeighborNames());
+            System.out.print("Neighboring Rooms: ");
+            System.out.println(current.getNeighborNames());
         }
 
-        System.out.println("Items: ");
+        System.out.print("Items: ");
         System.out.println(current.getItems());
+
+        System.out.println("Creatures in the room: " + level.getNearEnemies(current));
     }
 
 }
