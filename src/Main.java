@@ -1,7 +1,10 @@
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
+
+    private static HashMap<String, Command> commands;
 
     public static void main(String[] args){
 
@@ -13,15 +16,46 @@ public class Main {
         String response = "";
         Scanner s = new Scanner(System.in);
 
+        setupCommands(l, player);
+
         do{
             System.out.println("You are in the " + player.getCurrentRoom());
             System.out.print("What do you want to do? > ");
             response = s.nextLine();
-
-            act(response, player, l);
+            Command command = lookupCommand(response);
+            command.execute();
+            //act(response, player, l);
 
         } while(!response.equals("quit"));
 
+    }
+
+    private static void setupCommands(Level level, Player player) {
+        commands = new HashMap<>();
+
+        commands.put("take", new TakeCommand(level, player));
+        commands.put("drop", new DropCommand(level, player));
+        commands.put("look", new LookCommand(level, player));
+        commands.put("go", new GoCommand(level, player));
+    }
+
+    private static Command lookupCommand(String response) {
+        String commandWord = getFirstWordIn( response );
+
+        Command c = commands.get(commandWord);
+        if(c == null) {
+            return new EmptyCommand();
+        }
+
+        c.init(response);
+
+        return c;
+    }
+
+    private static String getFirstWordIn(String response) {
+        String[] responseSplit = response.split(" ");
+
+        return responseSplit[0];
     }
 
     private static void act(String response, Player player, Level l) {
@@ -36,10 +70,10 @@ public class Main {
             l.addDirectedEdge(player.getCurrentRoom().getName(), responseSplit[1]);
         } else if(response.equals("quit")) {
             // exit loop
-        } else if(responseSplit[0].equals("pick") && responseSplit[1].equals("up")) {
-            Item item = player.getCurrentRoom().getItem(responseSplit[2]);
+        } else if(responseSplit[0].equals("take")) {
+            Item item = player.getCurrentRoom().getItem(responseSplit[1]);
             player.addItem(item);
-            player.getCurrentRoom().removeItem(responseSplit[2]);
+            player.getCurrentRoom().removeItem(responseSplit[1]);
         } else if(responseSplit[0].equals("drop")) {
             Item item = player.getItem(responseSplit[1]);
             player.dropItem(item);

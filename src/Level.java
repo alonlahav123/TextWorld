@@ -7,7 +7,7 @@ public class Level {
     private ArrayList<Enemies> enemies;
 
     public Level() {
-        rooms = new HashMap<String, Room>();
+        rooms = new HashMap<>();
         this.items = new ArrayList<>();
         enemies = new ArrayList<>();
     }
